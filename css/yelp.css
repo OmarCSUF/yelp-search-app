@@ -1,0 +1,172 @@
+/* Misc
+-------------------------------------------*/
+header, section {
+  display: block;
+}
+.inline {
+  display: inline;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.clear {
+  clear: both;
+}
+.hidden-all {
+  display: none;
+}
+
+.loading {
+  font-size: 18px;
+}
+.loading img {
+  display: block;
+  margin: auto;
+  margin-bottom: 15px;
+}
+
+/* Bootstrap Overrides
+-------------------------------------------*/
+.modal-header {
+  background: #d32323 url('../img/bg/yelp.png') no-repeat center;
+  color: #FFF;
+}
+.modal-header h4 .caption {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* Header
+-------------------------------------------*/
+.yelp > header {
+  background: #d32323 url('../img/bg/yelp.png') no-repeat center;
+  color: #FFF;
+  padding: 20px;
+  margin-bottom: 50px;
+  font-size: 22px;
+}
+.yelp > header h1 {
+  margin: 0;
+  margin-top: 10px;
+  font-size: 20px;
+  line-height: 23px;
+  font-weight: bold;
+  color: #FFF;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Search
+-------------------------------------------*/
+.yelp input.search {
+  margin-right: 10px;
+  display: inline;
+  max-width: 300px;
+}
+.yelp input.location {
+  margin-right: 10px;
+  display: inline;
+  max-width: 150px;
+}
+
+/* Search Results
+-------------------------------------------*/
+.yelp .table-results {
+  margin-top: 30px;
+}
+.yelp .table-results > tbody > tr > td {
+  vertical-align: middle;
+}
+.yelp a.thumb {
+  display: block;
+  border-radius: 10px;
+  width: 120px;
+  height: 120px;
+  overflow: hidden;
+  background-repeat: none;
+  background-size: cover; 
+  background-position: 50%;
+}
+.yelp .results td {
+  font-size: 14px;
+}
+.yelp .review-count {
+  color: #CCC;
+}
+.yelp .no-results {
+  background: transparent !important;
+}
+.yelp .no-results td {
+  text-align: center;
+  color: red;
+  padding: 0;
+  border: none;
+}
+.yelp .results .name {
+  text-decoration: none;
+  font-size: 18px;
+  margin-bottom: 3px;
+}
+.yelp .results .categories {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.yelp .results .categories li {
+  display: inline;
+}
+.yelp .results .categories li::after { 
+    content: ",";
+}
+.yelp .results .categories li:last-child::after { 
+    content: "";
+}
+
+/* Reviews
+-------------------------------------------*/
+.reviews a.name {
+  text-decoration: none;
+  font-size: 18px;
+  margin-bottom: 3px;
+}
+.reviews td {
+  vertical-align: top;
+}
+
+/* Bootstrap 3 Media Queries
+-------------------------------------------*/
+@media (max-width:767px) {
+  .yelp > header h1 {
+    font-size: 18px;
+  }
+  .yelp > header {
+    margin-bottom: 25px;
+  }
+  .yelp .table-results {
+    margin-top: 25px;
+  }
+  .yelp input.search {
+    max-width: 250px;
+    margin-bottom: 10px;
+
+  }
+  .yelp input.location {
+    max-width: 250px;
+    margin-bottom: 10px;
+  }
+  .yelp a.thumb {
+    width: 100px;
+    height: 100px;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  .yelp .btn-search {
+    margin-top: 10px;
+  }
+}
+@media (min-width:992px) and (max-width: 1199px) {
+
+}
+@media (min-width:1200px) {
+
+}
