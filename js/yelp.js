@@ -165,8 +165,6 @@
      * @param object e The javascript event
      */
     getReviews: function (e) {
-      console.log('Getting Reviews');
-
       var $modal = $(this),
           $btn = $(e.target),
           $tr = $btn.closest('tr'),
@@ -175,14 +173,18 @@
           $loading = $('.loading', $modal),
           $tblReviews = $('.table-reviews', $modal),
           $reviews = $('.reviews', $modal);
-
-      console.log('Business ID:', id);
       
       $loading.show();
       $tblReviews.hide();
       
       // Retrieve and cache review calls
-      if (typeof $reviews.data('reviews') === 'undefined') {
+      if ($reviews.data('reviews')) {
+        $tblReviews.show();
+        $loading.hide();
+      } else {
+        console.log('Getting Reviews');
+        console.log('Business ID:', id);
+        
         $.ajax({
           url: App.proxy,
           dataType: 'jsonp',
