@@ -1,9 +1,14 @@
 (function ($) {
   console.log('Yelp Fusin API v3');
 
+  /**
+   * Core application business logic
+   */
   var App = {
+    // Proxy url for jsonp AWS S3 requests
     proxy: '<YOUR PROXY URL>',
     
+    // Yelp API Endpoints
     yelp: {
       token_url: 'https://api.yelp.com/oauth2/token',
       search_url: 'https://api.yelp.com/v3/businesses/search',
@@ -15,7 +20,10 @@
       token_type: undefined,
       access_token: undefined
     },
-
+    
+    /**
+     * Initializes the application by retrieving the API token
+     */
     init: function () {
       console.log('Init');
       
@@ -24,6 +32,11 @@
       });
     },
     
+    /**
+     * Retrieves the API token and stores it
+     *
+     * @param object options Any additional request options
+     */
     getToken: function (options) {
       console.log('Getting Token');
       
@@ -59,10 +72,29 @@
       });
     },
     
+    /**
+     * Outputs application errors
+     *
+     * @param array|string message The error message
+     */
     error: function (message) {
-      console.error(message);  
+      message = (typeof message === 'string') ? [message] : message;
+      
+      if ($.isArray(message)) {
+        if (message.length > 1) {
+          $('.modal-errors .errors').html('<ol><li>' + message.join('</li><li>') + '</li></ol>');
+        } else { 
+          $('.modal-errors .errors').html(message[0]);
+        }
+        
+        $('.modal-errors').modal('show'); 
+        console.error(message.join('\n'));
+      }
     },
     
+    /**
+     * Starts the application if a token was successfully obtain
+     */
     start: function () {
       console.log('Starting App');
       
@@ -71,10 +103,18 @@
       $('.btn-search').on('click', App.search).trigger('click');
     },
 
+    /**
+     * Sets up dynamically built DOM elements
+     *
+     * @param object elem The dynamic parent element
+     */
     setup: function (elem) {
       $('.modal-reviews').off('show.bs.modal').on('show.bs.modal', App.getReviews);
     },
     
+    /**
+     * Performs Yelp API searching and updates the DOM
+     */
     search: function () {
       console.log('Searching');
       
@@ -83,9 +123,9 @@
       
       $('.results').html('');
 
-      console.log(term);
+      console.log('Search Term:', term);
       
-      if (term !== '') {
+      if (term) {
         $.ajax({
           url: App.proxy,
           dataType: 'jsonp',
@@ -119,6 +159,11 @@
       }
     },
     
+    /**
+     * Retrieves user reviews based on the Yelp business id
+     *
+     * @param object e The javascript event
+     */
     getReviews: function (e) {
       console.log('Getting Reviews');
 
@@ -131,44 +176,54 @@
           $tblReviews = $('.table-reviews', $modal),
           $reviews = $('.reviews', $modal);
 
-      console.log(id);
+      console.log('Business ID:', id);
       
       $loading.show();
       $tblReviews.hide();
       
-      $.ajax({
-        url: App.proxy,
-        dataType: 'jsonp',
-        data: {
-          url: url,
-          token: App.auth.access_token
-        },
-        cache: true,
-        success: function(data) {
-            console.log('Reviews');
-            console.log(data);
+      // Retrieve and cache review calls
+      if (typeof $reviews.data('reviews') === 'undefined') {
+        $.ajax({
+          url: App.proxy,
+          dataType: 'jsonp',
+          data: {
+            url: url,
+            token: App.auth.access_token
+          },
+          cache: true,
+          success: function(data) {
+              console.log('Reviews');
+              console.log(data);
+
+              var template = $('#tmpl-reviews').html(),
+                  html = _.template(template);
+
+              $reviews.html(html(data));
+              $reviews.data('reviews', data);
+              $tblReviews.show();
+              $loading.hide();
+              App.setup($reviews);
+          },
+          error: function () {
+            console.error('Yelp search failed..');
 
             var template = $('#tmpl-reviews').html(),
                 html = _.template(template);
 
-            $reviews.html(html(data));
+            $reviews.html(html());
             $tblReviews.show();
             $loading.hide();
-            App.setup($reviews);
-        },
-        error: function () {
-          console.error('Yelp search failed..');
-
-          var template = $('#tmpl-reviews').html(),
-              html = _.template(template);
-
-          $reviews.html(html());
-          $tblReviews.show();
-          $loading.hide();
-        }
-      });
+          }
+        });
+      }
     },
     
+    /**
+     * Takes the Yelp location object and assembles an address for display
+     *
+     * @param object location The Yelp location object
+     * @return string A display friendly address
+     */
     getAddress: function (location) {
       var value = '';
       
@@ -191,6 +246,12 @@
       return value;
     },
     
+    /**
+     * Takes the Yelp location object and assembles a goolge maps address query string
+     *
+     * @param object location The Yelp location object
+     * @return string A goolge maps address query string
+     */
     getGoogleQuery: function (location) {
       var value = [];
       
@@ -215,6 +276,12 @@
       return value;
     },
     
+    /**
+     * Takes a mysql formatted date and formats it to m/d/y
+     *
+     * @param string date THe mysql formatted date
+     * @return string The formatted date
+     */
     getDate: function (date) {
       var value = '';
       
